@@ -1,6 +1,7 @@
 package com.hamza.spring.training.JPAHibernateAdvancedMapping.dao;
 
 import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Instructor;
+import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.InstructorDetail;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,5 +34,20 @@ public class AppDAOImpl implements AppDAO{
     public void deleteInstructorById(int id) {
         Instructor instructor = findInstructorById(id);
         entityManager.remove(instructor);
+    }
+
+    @Override
+    public InstructorDetail findInstructorDetailById(int id) {
+        return entityManager.find(InstructorDetail.class, id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteInstructorDetailsOnly(int id) {
+        InstructorDetail tempInstructorDetail = findInstructorDetailById(id);
+
+        // break bi-directional relationship
+        tempInstructorDetail.getInstructor().setInstructorDetail(null);
+        entityManager.remove(tempInstructorDetail);
     }
 }
