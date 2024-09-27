@@ -3,6 +3,7 @@ package com.hamza.spring.training.JPAHibernateAdvancedMapping.dao;
 import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Course;
 import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Instructor;
 import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.InstructorDetail;
+import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Student;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,5 +37,13 @@ public interface AppDAO {
     void save(Course theCourse);
 
     Course findCourseAndReviewsByCourseId(int theId);
+
+    Course findCourseAndStudentsByCourseId(int theId);
+
+    Student findStudentAndCoursesByStudentId(int theId);
+
+    void update(Student student);
+
+    void deleteCourseByIdWithoutStudent(int theId);
 
 }

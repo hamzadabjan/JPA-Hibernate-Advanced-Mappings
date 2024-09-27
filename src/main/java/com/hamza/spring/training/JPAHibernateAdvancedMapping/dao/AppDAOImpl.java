@@ -1,9 +1,6 @@
 package com.hamza.spring.training.JPAHibernateAdvancedMapping.dao;
 
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Course;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Instructor;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.InstructorDetail;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Review;
+import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,4 +130,41 @@ public class AppDAOImpl implements AppDAO{
 
     }
 
+    @Override
+    public Course findCourseAndStudentsByCourseId(int theId) {
+
+        TypedQuery<Course> query = entityManager.createQuery("select c from Course c join fetch c.students where c.id =:data",Course.class);
+
+        query.setParameter("data",theId);
+
+        Course tempCourse = query.getSingleResult();
+
+        return tempCourse;
+    }
+
+    @Override
+    public Student findStudentAndCoursesByStudentId(int theId) {
+        TypedQuery<Student> query = entityManager.createQuery("select s from Student s join fetch s.courses where s.id =:data",Student.class);
+
+        query.setParameter("data",theId);
+
+        Student tempStudent = query.getSingleResult();
+
+        return tempStudent;
+    }
+
+    @Override
+    @Transactional
+    public void update(Student student) {
+        entityManager.merge(student);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCourseByIdWithoutStudent(int theId) {
+
+        Course tempcourse = entityManager.find(Course.class,theId);
+        //tempcourse.setStudents(null);
+        entityManager.remove(tempcourse);
+    }
 }

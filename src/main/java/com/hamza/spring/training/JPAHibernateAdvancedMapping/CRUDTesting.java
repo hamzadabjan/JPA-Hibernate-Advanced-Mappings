@@ -1,10 +1,7 @@
 package com.hamza.spring.training.JPAHibernateAdvancedMapping;
 
 import com.hamza.spring.training.JPAHibernateAdvancedMapping.dao.AppDAO;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Course;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Instructor;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.InstructorDetail;
-import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.Review;
+import com.hamza.spring.training.JPAHibernateAdvancedMapping.entity.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +28,80 @@ public class CRUDTesting {
             //updateCourse(appDAO);
             //deleteCourse(appDAO);
             //createCourseWithReviews(appDAO);
-            findCourseWithReviews(appDAO);
+            //findCourseWithReviews(appDAO);
+            //createCourseWithStudents(appDAO);
+            //findCourseWithStudents(appDAO);
+            //findStudentWithCourses(appDAO);
+            //updateStudent(appDAO);
+            deleteCourseOnly(appDAO);
         };
+    }
+
+    private void deleteCourseOnly(AppDAO appDAO) {
+        int theId = 17;
+        System.out.println("deleting course which id: "+theId);
+        appDAO.deleteCourseByIdWithoutStudent(theId);
+        System.out.println("Done");
+    }
+
+    private void updateStudent(AppDAO appDAO) {
+
+        int theId = 4;
+        Student tempStudent = appDAO.findStudentAndCoursesByStudentId(theId);
+
+        tempStudent.addCourse(new Course("how to be a football player"));
+        tempStudent.addCourse(new Course("how to be an artist"));
+
+        System.out.println("Updating the student: "+ tempStudent);
+        System.out.println("associated courses: "+ tempStudent.getCourses());
+
+        appDAO.update(tempStudent);
+
+
+
+    }
+
+    private void findStudentWithCourses(AppDAO appDAO) {
+
+        int theId=4;
+        System.out.println("searching the student with id: "+theId);
+        Student tempStudent = appDAO.findStudentAndCoursesByStudentId(theId);
+        System.out.println("tempCourse "+tempStudent);
+        //List<Student> tempStudents = tempCourse.getStudents();
+        System.out.println("tempCourse "+tempStudent.getCourses());
+    }
+
+    private void findCourseWithStudents(AppDAO appDAO) {
+
+        int theId=11;
+        System.out.println("searching the course with id: "+theId);
+        Course tempCourse = appDAO.findCourseAndStudentsByCourseId(theId);
+        System.out.println("tempCourse "+tempCourse);
+        //List<Student> tempStudents = tempCourse.getStudents();
+        System.out.println("tempCourse "+tempCourse.getStudents());
+
+
+
+
+
+
+    }
+
+    private void createCourseWithStudents(AppDAO appDAO) {
+
+        Course tempCourse = new Course("How to be a pianist");
+
+
+        Student tempStudent3 = new Student("rayhan", "Dabjan","rayhan.dabjan@gmail.com");
+
+        tempCourse.addStudent(tempStudent3);
+
+        System.out.println("Saving the Course"+tempCourse);
+        System.out.println("Saving the Students"+tempCourse.getStudents());
+
+        appDAO.save(tempCourse);
+
+        System.out.println("Done");
     }
 
     private void findCourseWithReviews(AppDAO appDAO) {
